@@ -1,0 +1,72 @@
+name: arc_kaniko-image-build
+
+on:
+  # Configure Manual Trigger
+  workflow_dispatch:
+
+permissions: write-all
+jobs: 
+  kaniko-build: 
+    name: build 
+    runs-on: arc-runner-set 
+    steps: 
+    - uses: actions/checkout@v3 
+    - name: build action
+      uses: aevea/action-kaniko@master
+      with: 
+        image: patrickameh/cdcrmeta
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+        build_file: ./docker/Dockerfile
+        cache: true
+        cache_registry: aevea/cache
+
+# jobs:
+#   anchore_scan_job:
+#     runs-on: arc-runner-set #ubuntu-latest
+#     name: Anchore grype security scan on ARC
+#     steps:
+#     - name: Checkout
+#       uses: actions/checkout@v2
+    
+#     # - name: Scan current project
+#     #   id: scan
+#     #   uses: anchore/scan-action@v3
+#     #   with:
+#     #     path: "./"
+#     #     fail-build: true
+#     #     acs-report-enable: true
+    
+#     # - name: upload Anchore scan SARIF report
+#     #   uses: github/codeql-action/upload-sarif@v2
+#     #   with:
+#     #     sarif_file: ${{ steps.scan.outputs.sarif }}
+    
+#     # - name: Set up Docker Buildx
+#     #   uses: docker/setup-buildx-action@v1
+
+#     - name: build local container
+#       uses: elgohr/Publish-Docker-Github-Action@v5 # docker/build-push-action@v2
+#       with:
+#         tags: cdc/geneflow2:latest
+#         file: ./docker/Dockerfile
+#         push: false
+#         load: true
+
+#     # - name: Scan image
+#     #   uses: anchore/scan-action@v3
+#     #   id: imagescan
+#     #   with:
+#     #     image: "cdc/geneflow2:latest"
+#     #     acs-report-enable: "true"
+#     #     fail-build: false
+
+#     # - name: upload Anchore Image scan SARIF report
+#     #   uses: github/codeql-action/upload-sarif@v2
+#     #   with:
+#     #     sarif_file: ${{ steps.imagescan.outputs.sarif }}
+
+#     - name: Syft SBOM
+#       uses: anchore/sbom-action@v0
+#       with:
+#         image: "cdc/geneflow2:latest"
