@@ -9,7 +9,7 @@ WORKDIR /app
 COPY . .
 
 # Install any needed dependencies specified in requirements.txt
-RUN pip3 install --no-cache-dir -r src/requirements.txt
+RUN pip3 install --no-cache-dir -r cdc-rmeta/src/requirements.txt
 
     
 # CMD ["python"]
